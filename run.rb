@@ -18,23 +18,24 @@ def print_board(array)
 end
 
 def get_row_col
-    outputArray = []
+    output_array = []
     row_number = ""
-    col_number = ""
+    col_number = ""    
     loop do
-        puts "Please enter a row"
+        puts "Please enter a row (0-2 or 'exit' to terminate game)"
         row_number = gets.chomp
         break if row_number == "exit"
-        puts "Please enter a column"
+        puts "Please enter a column (0-2 or 'exit' to terminate game)"
         col_number = gets.chomp
         break if col_number == "exit"
-        row_number = row_number.to_i
-        col_number = col_number.to_i
-        break if ((row_number >= 0 && row_number <= 2) && (col_number >= 0 && col_number <= 2)) #notify player that there row/col selection is invalid and need to reselect
+        row_number = Integer(row_number) rescue (-1)
+        col_number = Integer(col_number) rescue (-1)
+        break if((row_number >= 0 && row_number <= 2) && (col_number >= 0 && col_number <= 2))
+        puts "You have inputed either an invalid row or column. Please try again"
     end
-    outputArray << row_number
-    outputArray << col_number
-    outputArray
+    output_array << row_number
+    output_array << col_number
+    output_array
 end
 
 def check_winner(game_board, player_letter)
@@ -54,25 +55,30 @@ print_board(game_board)
 loop do 
     coordinates = get_row_col
     
-    if (coordinates[0] == "exit" || coordinates[1] == "exit")
+    if(coordinates[0] == "exit" || coordinates[1] == "exit")
         break
     end
-
+    
     if turn_counter % 2 == 0
         game_board[coordinates[0]][coordinates[1]] = "X"
         if(check_winner(game_board, "X"))
-            puts "'X' player wins"
+            puts "'X' player wins!"
             break
         end
     else
         game_board[coordinates[0]][coordinates[1]] = "O"
         if(check_winner(game_board, "O"))
-            puts "'O' player wins"
+            puts "'O' player wins!"
             break
         end
     end
 
     print_board(game_board)
+
+    if(turn_counter == 9)
+        puts "Tie Game!"
+        break
+    end
 
     turn_counter += 1
 end
